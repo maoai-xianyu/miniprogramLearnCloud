@@ -18,11 +18,13 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    this.selectArticle();
-    this.seleceArticleById();
-    this.selectArticleWhere();
+    //this.selectArticle();
+    //this.seleceArticleById();
+    //this.selectArticleWhere();
     //this.addArticle();
-    this.removeArticle();
+    //this.removeArticle();
+    //this.updateArticleById();
+    this.updateArticleAllSet();
   },
   // 获取数据，获取所有数据（考虑到性能，小程序一次性最多只能获取20条数据)
   selectArticle: function() {
@@ -91,5 +93,35 @@ Page({
   // 删除多条数据（只能在服务端实现，需要用到云函数） 之后写
   removeArticleCloud: function() {
 
-  }
+  },
+  // 局部数据：局部更新是一次性只更新一条数据中的某几个字段的值，用的是update方法
+  updateArticleById:function(){
+    db.collection('article').doc('face13585d3a717002ddc74d36910f87').update({
+      data:{
+        author:"盒子鱼开发"
+      }
+    }).then(res=>{
+      console.log("更新成功 update 更新单个数据");
+      console.log();
+    })
+  },
+  //整体更新：整体更新是一次性把所有数据都更新，用的是set方法
+  updateArticleAllSet: function () {
+    db.collection('article').doc('face13585d3a717002ddc74d36910f87').set({
+      data: {
+        title:"盒子鱼学习",
+        content:"学习为了更好发展",
+        author: "盒子鱼开发",
+        pub_date:new Date(),
+        tags:['开发','测试']
+      }
+    }).then(res => {
+      console.log("更新成功 set 更多全部数");
+      console.log();
+    })
+  },
+  // 一次更新多个数据：需要在服务器端，使用云函数来实现。
+  updateArticleCloud: function () {
+
+  },
 })
