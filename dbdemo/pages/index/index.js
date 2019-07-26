@@ -18,11 +18,13 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    this.selectActicle();
-    //this.addActicle();
+    this.selectArticle();
+    this.seleceArticleById();
+    this.selectArticleWhere();
+    //this.addArticle();
   },
-  // 获取数据
-  selectActicle: function() {
+  // 获取数据，获取所有数据（考虑到性能，小程序一次性最多只能获取20条数据)
+  selectArticle: function() {
     // 一般写法
     db.collection('article').get({
       success: res => {
@@ -31,20 +33,40 @@ Page({
     });
     // promise 风格,这种的还是很舒服的
     db.collection('article').get().then(res => {
+      console.log("查询数据全部，最多20条");
       console.log(res);
     });
   },
-  // 添加数据
-  addActicle: function() {
-    db.collection('article').add({
-      data:{
-        title:"我国单身人口规模已达2.4亿，你以为单身只是影响了父母抱孙子？",
-        author:"三联生活周刊",
-        pub_date:new Date(),
-        content: "靠外卖吃饭，住小而美的居所，囤购喜欢的物品，通过网上交友相亲，从旅行健身取乐，与宠物为伴，遵从自己内心的需求，敢于提前透支消费能力，单身群体的生活状态折射着社会发展和生活方式的变化。",
-        tags:["国际","科技"]
+  // 如果你知道某条数据的id，可以根据id获取某条数据：通过id获取数据需要通过doc函数来实现
+  seleceArticleById: function() {
+    db.collection('article').doc('310b52b2-c6cf-49dc-9551-2f7b8288205c')
+      .get().then(res => {
+        console.log("查询数据 byid");
+        console.log(res);
+      })
+  },
+  // 根据条件获取数据：根据条件获取数据，可以通过where函数来实现。
+  selectArticleWhere: function() {
+    const _ = db.command
+    db.collection('article').where({
+        pub_date: _.gte(new Date("2019/7/26 11:00:00")),
       }
-    }).then(res =>{
+    ).get().then(res => {
+      console.log("查询数据 where");
+      console.log(res);
+    })
+  },
+  // 添加数据
+  addArticle: function() {
+    db.collection('article').add({
+      data: {
+        title: "我国单身人口规模已达2.4亿，你以为单身只是影响了父母抱孙子？",
+        author: "三联生活周刊",
+        pub_date: new Date(),
+        content: "靠外卖吃饭，住小而美的居所，囤购喜欢的物品，通过网上交友相亲，从旅行健身取乐，与宠物为伴，遵从自己内心的需求，敢于提前透支消费能力，单身群体的生活状态折射着社会发展和生活方式的变化。",
+        tags: ["国际", "科技"]
+      }
+    }).then(res => {
       console.log("添加成功");
       console.log(res);
     })
