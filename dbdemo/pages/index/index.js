@@ -22,6 +22,7 @@ Page({
     this.seleceArticleById();
     this.selectArticleWhere();
     //this.addArticle();
+    this.removeArticle();
   },
   // 获取数据，获取所有数据（考虑到性能，小程序一次性最多只能获取20条数据)
   selectArticle: function() {
@@ -49,9 +50,8 @@ Page({
   selectArticleWhere: function() {
     const _ = db.command
     db.collection('article').where({
-        pub_date: _.gte(new Date("2019/7/26 11:00:00")),
-      }
-    ).get().then(res => {
+      pub_date: _.gte(new Date("2019/7/26 11:00:00")),
+    }).get().then(res => {
       console.log("查询数据 where");
       console.log(res);
     })
@@ -70,5 +70,26 @@ Page({
       console.log("添加成功");
       console.log(res);
     })
+  },
+  // 删除一条数据：输出一条数据，需要知道这条数据的id
+  removeArticle: function() {
+
+    // face13585d3a70df02dd437954e6e23c 为用户在控制台添加的数据
+    db.collection('article').doc('face13585d3a70df02dd437954e6e23c').remove()
+      .then(res => {
+        console.log("删除成功 只能删用户在控制台添加数据");
+        console.log(res);
+      });
+
+    // 310b52b2-c6cf-49dc-9551-2f7b8288205c 为管理员的数据，所以删除不了
+    // db.collection('article').doc('310b52b2-c6cf-49dc-9551-2f7b8288205c').remove()
+    //   .then(res => {
+    //     console.log("删除成功 只能删用户在控制台添加数据");
+    //     console.log(res);
+    //   });
+  },
+  // 删除多条数据（只能在服务端实现，需要用到云函数） 之后写
+  removeArticleCloud: function() {
+
   }
 })

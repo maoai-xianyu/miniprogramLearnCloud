@@ -243,3 +243,50 @@ Page({
   }
 })
 ```
+### 删除数据
+```
+// dbdemo/pages/index/index.js
+// 操作数据库
+// const db = wx.cloud.database({
+//     env: "codingtk-dev-9nkey",
+// })
+const db = wx.cloud.database(); // 不添加 env 默认是当前环境
+
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.removeArticle();
+  },
+  // 删除一条数据：输出一条数据，需要知道这条数据的id
+  removeArticle: function() {
+
+    // face13585d3a70df02dd437954e6e23c 为用户在控制台添加的数据
+    db.collection('article').doc('face13585d3a70df02dd437954e6e23c').remove()
+      .then(res => {
+        console.log("删除成功 只能删用户在控制台添加数据");
+        console.log(res);
+      });
+
+    // 310b52b2-c6cf-49dc-9551-2f7b8288205c 为管理员的数据，所以删除不了
+    // db.collection('article').doc('310b52b2-c6cf-49dc-9551-2f7b8288205c').remove()
+    //   .then(res => {
+    //     console.log("删除成功 只能删用户在控制台添加数据");
+    //     console.log(res);
+    //   });
+  },
+  // 删除多条数据（只能在服务端实现，需要用到云函数） 之后写
+  removeArticleCloud: function() {
+
+  }
+})
+```
