@@ -17,7 +17,8 @@ Page({
     // this.commandEq();
     // this.commandgtOrgteOrltOrlte();
     // this.commandIn();
-    this.commandAnd();
+    // this.commandAnd();
+    this.commandOr();
   },
   commandEq: function() {
     db.collection('article').where({
@@ -102,7 +103,7 @@ Page({
     // 变化
     db.collection('article').where({
       pub_date: _.gt(new Date("2019/7/26 10:00:00")).and(_.lt(new Date("2019/7/26 11:00:00")))
-    }).get().then(res =>{
+    }).get().then(res => {
       console.log("and 操作 链接方式");
       console.log(res);
     });
@@ -110,11 +111,36 @@ Page({
     // 多个条件
     db.collection('article').where({
       pub_date: _.gt(new Date("2019/7/26 10:00:00")).and(_.lt(new Date("2019/7/26 11:00:00"))),
-      author:_.eq("今日头条")
-    }).get().then(res =>{
+      author: _.eq("今日头条")
+    }).get().then(res => {
       console.log("and 操作 多个条件");
       console.log(res);
     })
+  },
 
+  // or 多个条件
+  commandOr: function() {
+    db.collection('article').where({
+      pub_date: _.or(_.gt(new Date("2019/7/26 14:00:00")), _.lt(new Date("2019/7/26 10:00:00")))
+    }).get().then(
+      res => {
+        console.log("or 操作 多个条件");
+        console.log(res);
+      }
+    );
+
+    db.collection('article').where(_.or([{
+        pub_date: _.or(_.gt(new Date("2019/7/26 14:00:00")), _.lt(new Date("2019/7/26 10:00:00")))
+      },
+      //  /今日/ 正则表达式
+      {
+        author:/今日/
+      }
+    ])).get().then(
+      res =>{
+        console.log("or 多个条件");
+        console.log(res);
+      }
+    )
   }
 })

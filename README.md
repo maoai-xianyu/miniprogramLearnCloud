@@ -538,3 +538,55 @@ Page({
   }
 })
 ```
+### command.or  查询指令，用于表示逻辑 "或" 的关系，表示需同时满足多个查询筛选条件。
+
+1. 一是可以进行字段值的 “或” 操作
+2. 也可以进行跨字段的 “或” 操作
+
+```
+// pages/command/command.js
+const db = wx.cloud.database();
+const _ = db.command;
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.commandOr();
+  },
+
+  // or 多个条件
+  commandOr: function() {
+    db.collection('article').where({
+      pub_date: _.or(_.gt(new Date("2019/7/26 14:00:00")), _.lt(new Date("2019/7/26 10:00:00")))
+    }).get().then(
+      res => {
+        console.log("or 操作 多个条件");
+        console.log(res);
+      }
+    );
+
+    db.collection('article').where(_.or([{
+        pub_date: _.or(_.gt(new Date("2019/7/26 14:00:00")), _.lt(new Date("2019/7/26 10:00:00")))
+      },
+      //  /今日/ 正则表达式
+      {
+        author:/今日/
+      }
+    ])).get().then(
+      res =>{
+        console.log("or 多个条件");
+        console.log(res);
+      }
+    )
+  }
+})
+```
