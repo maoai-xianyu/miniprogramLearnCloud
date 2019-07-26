@@ -351,7 +351,7 @@ Page({
 
 ## 141~149 command 指令
 
-### command.eq
+### command.eq 等于  command.neq 不等于
 ```
 // pages/command/command.js
 const db = wx.cloud.database();
@@ -418,5 +418,36 @@ Page({
     );
   }
 
+})
+```
+
+### command.lt 小于 command.lte 小于等于 command.gt 大于 command.gte 大于等于
+```
+// pages/command/command.js
+const db = wx.cloud.database();
+const _ = db.command;
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.commandgtOrgteOrltOrlte();
+  },
+  // 大于  大于等于  小鱼 小于等于
+  commandgtOrgteOrltOrlte: function() {
+    db.collection('article').where({
+      pub_date: _.lt(new Date("2019/7/26 11:00:00"))
+    }).get().then(res => {
+      console.log(res);
+    })
+  }
 })
 ```

@@ -14,7 +14,8 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    this.commandEq();
+    //this.commandEq();
+    this.commandgtOrgteOrltOrlte();
   },
   commandEq: function() {
     db.collection('article').where({
@@ -61,6 +62,13 @@ Page({
         console.log(res);
       }
     );
+  },
+  // 大于  大于等于  小鱼 小于等于
+  commandgtOrgteOrltOrlte: function() {
+    db.collection('article').where({
+      pub_date: _.lt(new Date("2019/7/26 11:00:00"))
+    }).get().then(res => {
+      console.log(res);
+    })
   }
-
 })
