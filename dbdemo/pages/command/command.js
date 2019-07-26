@@ -15,7 +15,8 @@ Page({
    */
   onLoad: function(options) {
     //this.commandEq();
-    this.commandgtOrgteOrltOrlte();
+    //this.commandgtOrgteOrltOrlte();
+    this.commandIn();
   },
   commandEq: function() {
     db.collection('article').where({
@@ -68,6 +69,23 @@ Page({
     db.collection('article').where({
       pub_date: _.lt(new Date("2019/7/26 11:00:00"))
     }).get().then(res => {
+      console.log("OrgteOrltOrlte 获取数据");
+      console.log(res);
+    })
+  },
+  // in
+  commandIn: function() {
+    db.collection('article').where({
+      author: _.in(['中国经济网'])
+    }).get().then(res => {
+      console.log("in 获取数据");
+      console.log(res);
+    });
+
+    db.collection('article').where({
+      tags: _.in(["教育", "国际"])
+    }).get().then(res => {
+      console.log("tags 获取数据");
       console.log(res);
     })
   }

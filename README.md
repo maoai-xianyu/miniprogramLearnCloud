@@ -451,3 +451,41 @@ Page({
   }
 })
 ```
+### command.in 查询筛选条件，表示字段的值需在给定的数组内  command.nin 查询筛选条件，表示字段的值需不在给定的数组内
+```
+// pages/command/command.js
+const db = wx.cloud.database();
+const _ = db.command;
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.commandIn();
+  },
+  // in
+  commandIn: function() {
+    db.collection('article').where({
+      author: _.in(['中国经济网'])
+    }).get().then(res => {
+      console.log("in 获取数据");
+      console.log(res);
+    });
+
+    db.collection('article').where({
+      tags: _.in(["教育", "国际"])
+    }).get().then(res => {
+      console.log("tags 获取数据");
+      console.log(res);
+    })
+  }
+})
+```
