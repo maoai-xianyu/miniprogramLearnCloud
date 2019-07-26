@@ -5,7 +5,7 @@ App({
      */
     onLaunch: function() {
         wx.cloud.init({
-            env: "codingtk-dev-9nkey", // 环境开发
+            //env: "codingtk-dev-9nkey", // 环境开发,不写默认当前环境
             traceUser: true //是否在将用户访问记录到用户管理中，在控制台中可见
         })
 

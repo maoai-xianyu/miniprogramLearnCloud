@@ -137,3 +137,41 @@ App({
 ### 创建集合
 
 > 在云开发的数据库中，使用的是NoSQL类型的数据库。关系型数据库中的表，对应的是NoSQL中的一个集合。所以在所数据操作之前，应该先创建一个集合。创建完集合后，也不需要跟关系型数据库一样，先定义好这个集合中的字段，而是直接插入数据，并且插入数据的时候，每条数据的字段无需保持一致！
+
+## 136~140 数据库使用
+
+### 创建数据库，初始化数据
+```
+// dbdemo/pages/index/index.js
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    // 操作数据库
+    // const db = wx.cloud.database({
+    //     env: "codingtk-dev-9nkey",
+    // })
+    const db = wx.cloud.database(); // 不添加 env 默认是当前环境
+    // 一般写法
+    db.collection('article').get({
+      success: res => {
+        console.log(res);
+      }
+    });
+    // promise 风格,这种的还是很舒服的
+    db.collection('article').get().then(res => {
+      console.log(res);
+    });
+    
+  }
+})
+```
