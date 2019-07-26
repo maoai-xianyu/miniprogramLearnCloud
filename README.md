@@ -489,3 +489,52 @@ Page({
   }
 })
 ```
+### command.and  查询指令 逻辑与
+```
+// pages/command/command.js
+const db = wx.cloud.database();
+const _ = db.command;
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.commandAnd();
+  },
+  // and
+  commandAnd: function() {
+    db.collection('article').where({
+      pub_date: _.and(_.gt(new Date("2019/7/26 10:00:00")), _.lt(new Date("2019/7/26 11:00:00")))
+    }).get().then(res => {
+      console.log("and 操作");
+      console.log(res);
+    });
+
+    // 变化
+    db.collection('article').where({
+      pub_date: _.gt(new Date("2019/7/26 10:00:00")).and(_.lt(new Date("2019/7/26 11:00:00")))
+    }).get().then(res =>{
+      console.log("and 操作 链接方式");
+      console.log(res);
+    });
+
+    // 多个条件
+    db.collection('article').where({
+      pub_date: _.gt(new Date("2019/7/26 10:00:00")).and(_.lt(new Date("2019/7/26 11:00:00"))),
+      author:_.eq("今日头条")
+    }).get().then(res =>{
+      console.log("and 操作 多个条件");
+      console.log(res);
+    })
+
+  }
+})
+```

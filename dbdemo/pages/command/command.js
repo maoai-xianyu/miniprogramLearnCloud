@@ -14,9 +14,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    //this.commandEq();
-    //this.commandgtOrgteOrltOrlte();
-    this.commandIn();
+    // this.commandEq();
+    // this.commandgtOrgteOrltOrlte();
+    // this.commandIn();
+    this.commandAnd();
   },
   commandEq: function() {
     db.collection('article').where({
@@ -88,5 +89,32 @@ Page({
       console.log("tags 获取数据");
       console.log(res);
     })
+  },
+  // and
+  commandAnd: function() {
+    db.collection('article').where({
+      pub_date: _.and(_.gt(new Date("2019/7/26 10:00:00")), _.lt(new Date("2019/7/26 11:00:00")))
+    }).get().then(res => {
+      console.log("and 操作");
+      console.log(res);
+    });
+
+    // 变化
+    db.collection('article').where({
+      pub_date: _.gt(new Date("2019/7/26 10:00:00")).and(_.lt(new Date("2019/7/26 11:00:00")))
+    }).get().then(res =>{
+      console.log("and 操作 链接方式");
+      console.log(res);
+    });
+
+    // 多个条件
+    db.collection('article').where({
+      pub_date: _.gt(new Date("2019/7/26 10:00:00")).and(_.lt(new Date("2019/7/26 11:00:00"))),
+      author:_.eq("今日头条")
+    }).get().then(res =>{
+      console.log("and 操作 多个条件");
+      console.log(res);
+    })
+
   }
 })
