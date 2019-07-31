@@ -19,7 +19,8 @@ Page({
     // this.commandIn();
     // this.commandAnd();
     // this.commandOr();
-    this.commandUpdateOrSet();
+    // this.commandUpdateOrSet();
+    this.commandRemove();
   },
   commandEq: function() {
     db.collection('article').where({
@@ -167,6 +168,17 @@ Page({
         })
       }
     }).then(res => {
+      console.log(res);
+    })
+  },
+
+  // 删除字段
+  commandRemove:function(){
+    db.collection("article").doc("face13585d3a717002ddc74d36910f87").update({
+      data:{
+        author:_.remove()
+      }
+    }).then(res =>{
       console.log(res);
     })
   }

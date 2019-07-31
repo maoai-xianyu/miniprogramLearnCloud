@@ -591,7 +591,9 @@ Page({
 })
 ```
 
-### command.set 更新指令 这个set和命令里面的set有区别，注意哦
+### command.set 更新指令  用于设定字段等于指定值
+
+> 这个set和命令里面的set有区别，注意哦
 ```
 // pages/command/command.js
 const db = wx.cloud.database();
@@ -634,6 +636,39 @@ Page({
         })
       }
     }).then(res => {
+      console.log(res);
+    })
+  }
+})
+```
+### command.remove()  更新指令。用于表示删除某个字段。
+
+```
+// pages/command/command.js
+const db = wx.cloud.database();
+const _ = db.command;
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.commandRemove();
+  },
+  // 删除字段
+  commandRemove:function(){
+    db.collection("article").doc("face13585d3a717002ddc74d36910f87").update({
+      data:{
+        author:_.remove()
+      }
+    }).then(res =>{
       console.log(res);
     })
   }
