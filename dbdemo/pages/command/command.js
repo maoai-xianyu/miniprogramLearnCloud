@@ -18,7 +18,8 @@ Page({
     // this.commandgtOrgteOrltOrlte();
     // this.commandIn();
     // this.commandAnd();
-    this.commandOr();
+    // this.commandOr();
+    this.commandUpdateOrSet();
   },
   commandEq: function() {
     db.collection('article').where({
@@ -134,13 +135,39 @@ Page({
       },
       //  /今日/ 正则表达式
       {
-        author:/今日/
+        author: /今日/
       }
     ])).get().then(
-      res =>{
+      res => {
         console.log("or 多个条件");
         console.log(res);
       }
     )
+  },
+
+  commandUpdateOrSet: function() {
+
+    // db.collection('article').doc("890198e15d3a719202dbfac645f0c7cd").update({
+    //   data: {
+    //     author: {
+    //       name: "三联生活周刊",
+    //       city: "山西大同"
+    //     }
+    //   }
+    // }).then(res => {
+    //   console.log(res);
+    // });
+
+    // _.set
+    db.collection('article').doc("890198e15d3a719202dbfac645f0c7cd").update({
+      data: {
+        author: _.set({
+          name: "三联生活周刊",
+          city: "山西大同"
+        })
+      }
+    }).then(res => {
+      console.log(res);
+    })
   }
 })
