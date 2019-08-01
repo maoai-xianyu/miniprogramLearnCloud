@@ -728,3 +728,49 @@ Page({
   }
 })
 ```
+### command.push   command.pop  command.shift command.unshift
+```
+// pages/command/command.js
+const db = wx.cloud.database();
+const _ = db.command;
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.commandPushPopShiftUnShift();
+  },
+
+ //更新指令，对一个值为数组的字段，往数组尾部添加一个或多个值。或字段原为空，则创建该字段并设数组为传入值。
+  commandPushPopShiftUnShift: function() {
+    db.collection('article').doc("25c59b425d42d0fa088fd6f315ecf933").update({
+      // data: {
+      //   tags: _.push(["盒子鱼"])
+      // }
+      // 更新指令，对一个值为数组的字段，将数组尾部元素删除。
+      // data: {
+      //   tags: _.pop(["盒子鱼"])
+      // }
+      // 更新指令，对一个值为数组的字段，将数组头部元素删除。
+      // data: {
+      //   tags: _.shift()
+      // }
+
+      // 更新指令，对一个值为数组的字段，往数组头部添加一个或多个值。或字段原为空，则创建该字段并设数组为传入值。
+      data: {
+        tags: _.unshift(["盒子鱼","国际","测试"])
+      }
+    }).then(res => {
+      console.log(res);
+    })
+  }
+})
+```

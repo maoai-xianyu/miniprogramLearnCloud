@@ -21,7 +21,8 @@ Page({
     // this.commandOr();
     // this.commandUpdateOrSet();
     // this.commandRemove();
-    this.commandInc();
+    // this.commandInc();
+    this.commandPushPopShiftUnShift();
   },
   commandEq: function() {
     db.collection('article').where({
@@ -174,17 +175,17 @@ Page({
   },
 
   // 删除字段
-  commandRemove:function(){
+  commandRemove: function() {
     db.collection("article").doc("face13585d3a717002ddc74d36910f87").update({
-      data:{
-        author:_.remove()
+      data: {
+        author: _.remove()
       }
-    }).then(res =>{
+    }).then(res => {
       console.log(res);
     })
   },
   // command.inc 更新指令。用于指示字段自增某个值，这是个原子操作，使用这个操作指令而不是先读数据、再加、再写回
-  commandInc:function(){
+  commandInc: function() {
     // 添加数据
     // db.collection('article').add({
     //   data: {
@@ -200,13 +201,37 @@ Page({
     //   console.log(res);
     // });
     db.collection('article').doc("25c59b425d42d0fa088fd6f315ecf933").update({
-      data:{
-        read_count:_.inc(1)
+      data: {
+        read_count: _.inc(1)
       }
     }).then(
-      res =>{
+      res => {
         console.log(res);
       }
     )
+  },
+
+ //更新指令，对一个值为数组的字段，往数组尾部添加一个或多个值。或字段原为空，则创建该字段并设数组为传入值。
+  commandPushPopShiftUnShift: function() {
+    db.collection('article').doc("25c59b425d42d0fa088fd6f315ecf933").update({
+      // data: {
+      //   tags: _.push(["盒子鱼"])
+      // }
+      // 更新指令，对一个值为数组的字段，将数组尾部元素删除。
+      // data: {
+      //   tags: _.pop(["盒子鱼"])
+      // }
+      // 更新指令，对一个值为数组的字段，将数组头部元素删除。
+      data: {
+        tags: _.shift()
+      }
+
+      // 更新指令，对一个值为数组的字段，往数组头部添加一个或多个值。或字段原为空，则创建该字段并设数组为传入值。
+      // data: {
+      //   tags: _.unshift(["盒子鱼","国际","测试"])
+      // }
+    }).then(res => {
+      console.log(res);
+    })
   }
 })
