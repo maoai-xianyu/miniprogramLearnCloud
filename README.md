@@ -774,3 +774,108 @@ Page({
   }
 })
 ```
+
+## 高级查询  150~155
+
+### collection.count  统计集合记录数或统计查询语句对应的结果记录数，注意这与集合权限设置有关，一个用户仅能统计其有读权限的记录数。
+
+```
+// pages/query/query.js
+const db = wx.cloud.database();
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.collectionCount();
+  },
+
+  collectionCount:function(){
+    db.collection('article').where({
+      title: /女/
+    }).count().then(
+      res => {
+        console.log(res);
+      }
+    )
+  }
+})
+```
+
+### collectionOrderBy 方法接受一个必填字符串参数fieldName用于定义需要排序的字段，一个字符串参数order定义排序顺序。order只能取 asc或desc。
+
+1. 如果需要对嵌套字段排序，需要用 "点表示法" 连接嵌套字段，比如author.age表示字段author里的嵌套字段age。
+2. 同时也支持按多个字段排序，多次调用orderBy即可，多字段排序时的顺序会按照orderBy调用顺序先后对多个字段排序。
+
+```
+// pages/query/query.js
+const db = wx.cloud.database();
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.collectionOrderBy();
+  },
+  // 排序
+  collectionOrderBy: function() {
+    db.collection('article')
+      .orderBy("pub_date", "desc")
+      .orderBy("read_count","asc")
+      .get().then(
+        res => {
+          console.log(res);
+        }
+      )
+  }
+})
+```
+
+### collection.limit
+
+```
+// pages/query/query.js
+const db = wx.cloud.database();
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.collectionLimit();
+  },
+  // 排序
+  collectionLimit: function() {
+    db.collection('article')
+      .limit(5)
+      .get().then(
+        res => {
+          console.log(res);
+        }
+      )
+  }
+})
+```
