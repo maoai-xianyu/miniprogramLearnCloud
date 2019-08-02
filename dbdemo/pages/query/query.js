@@ -15,7 +15,9 @@ Page({
   onLoad: function(options) {
     // this.collectionCount();
     // this.collectionOrderBy();
-    this.collectionLimit();
+    // this.collectionLimit();
+    // this.collectionSkip();
+    this.collectionField();
   },
 
   collectionCount: function() {
@@ -47,5 +49,24 @@ Page({
           console.log(res);
         }
       )
+  },
+  // 跳过几条数据，用于翻页
+  collectionSkip: function() {
+    db.collection('article').skip(4).limit(4).get().then(
+      res => {
+        console.log(res);
+      }
+    )
+  },
+  // 指定返回结果中记录需返回的字段。
+  collectionField:function(){
+    db.collection('article').field({
+      title:true,
+      author:true
+    }).get().then(
+      res =>{ 
+        console.log(res);
+      }
+    )
   }
 })

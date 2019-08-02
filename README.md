@@ -879,3 +879,67 @@ Page({
   }
 })
 ```
+
+### collection.skip  指定查询返回结果时从指定序列后的结果开始返回，常用于分页
+```
+// pages/query/query.js
+const db = wx.cloud.database();
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.collectionSkip();
+  },
+
+  // 跳过几条数据，用于翻页
+  collectionSkip: function() {
+    db.collection('article').skip(4).limit(4).get().then(
+      res => {
+        console.log(res);
+      }
+    )
+  }
+})
+```
+
+### collection.feild 指定返回结果中记录需返回的字段 节省流量
+```
+// pages/query/query.js
+const db = wx.cloud.database();
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.collectionField();
+  },
+  // 指定返回结果中记录需返回的字段。
+  collectionField:function(){
+    db.collection('article').field({
+      title:true,
+      author:true
+    }).get().then(
+      res =>{ 
+        console.log(res);
+      }
+    )
+  }
+})
+```
