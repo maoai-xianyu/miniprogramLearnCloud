@@ -943,3 +943,54 @@ Page({
   }
 })
 ```
+### 正则表达式
+
+从基础库2.3.2开始（wx-server-sdk从0.0.23开始），数据库支持正则表达式查询，开发者可以在查询语句中使用 JavaScript原生正则对象或使用db.RegExp方法来构造正则对象然后进行字符串匹配。在查询条件中对一个字段进行正则匹配即要求该字段的值可以被给定的正则表达式匹配，注意正则表达式不可用于db.command内（如db.command.in）。
+
+> 使用正则表达式匹配可以满足字符串匹配需求，但不适用于长文本 / 大数据量的文本匹配 / 搜索，因为会有性能问题，对此类场景应使用文本搜索引擎如 ElasticSearch 等实现。
+
+> options 支持 i, m, s 这三个 flag，注意 JavaScript 原生正则对象构造时仅支持其中的 i, m 两个 flag，因此需要使用到 s 这个 flag 时必须使用 db.RegExp 构造器构造正则对象
+
+1. i 大小写不敏感
+2. m 跨行匹配；让开始匹配符 ^ 或结束匹配符 $ 时除了匹配字符串的开头和结尾外，还匹配行的开头和结尾
+3. s 让 . 可以匹配包括换行符在内的所有字符
+```
+// pages/query/query.js
+const db = wx.cloud.database();
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.collectionRegex();
+  },
+  // 小程序正则表达式
+  collectionRegex:function(){
+    
+    db.collection('article').where({
+      title:/^重庆/i
+    }).get().then(res =>{
+      console.log(res);
+    });
+
+    console.log("RegExp -begin");
+
+    db.collection('article').where({
+      title:db.RegExp({
+        regexp:"^重庆",
+        options:"is"
+      })
+    }).get().then(res => {
+      console.log(res);
+    });
+  }
+})
+```

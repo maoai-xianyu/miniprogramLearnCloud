@@ -17,7 +17,8 @@ Page({
     // this.collectionOrderBy();
     // this.collectionLimit();
     // this.collectionSkip();
-    this.collectionField();
+    // this.collectionField();
+    this.collectionRegex();
   },
 
   collectionCount: function() {
@@ -68,5 +69,25 @@ Page({
         console.log(res);
       }
     )
+  },
+  // 小程序正则表达式
+  collectionRegex:function(){
+    
+    db.collection('article').where({
+      title:/^重庆/i
+    }).get().then(res =>{
+      console.log(res);
+    });
+
+    console.log("RegExp -begin");
+
+    db.collection('article').where({
+      title:db.RegExp({
+        regexp:"^重庆",
+        options:"is"
+      })
+    }).get().then(res => {
+      console.log(res);
+    });
   }
 })
