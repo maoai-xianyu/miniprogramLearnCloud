@@ -994,3 +994,116 @@ Page({
   }
 })
 ```
+## 156 文件操作
+
+> 新建项目 filedemo
+
+### 修改根目录
+```
+{
+	"miniprogramRoot": "filedemo/",
+	"cloudfunctionRoot": "cloudfunctions/",
+	"setting": {
+		"urlCheck": true,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true
+	},
+	"appid": "wx08e3282a7dda50dd",
+	"projectname": "miniprogramLearnCloud",
+	"libVersion": "2.7.7",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"list": []
+		},
+		"miniprogram": {
+			"current": 0,
+			"list": [
+				{
+					"id": -1,
+					"name": "db guide",
+					"pathName": "pages/databaseGuide/databaseGuide"
+				}
+			]
+		}
+	}
+}
+```
+
+### 文件上传
+
+```
+<!--filedemo/pages/index/index.wxml-->
+<button bindtap="onSelectImage">上传图片</button>
+<image src="{{imageUrl}}"/>
+
+// filedemo/pages/index/index.js
+Page({
+
+    /**
+     * 页面的初始数据
+     */
+    data: {
+
+    },
+
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad: function(options) {
+
+    },
+
+    onSelectImage: function(event) {
+        var that = this;
+        wx.chooseImage({
+            count: '9', //最多可以选择的图片张数,
+            success: res => {
+                console.log(res);
+                // 获取文件路径
+                var filePath = res.tempFilePaths[0];
+                const uploadtask = wx.cloud.uploadFile({
+                    cloudPath: 'maoai_xianyu.png',
+                    filePath: filePath, // 文件路径
+                    success: res => {
+                        console.log("上传成功");
+                        console.log(res);
+                        that.setData({
+                            imageUrl: res.fileID
+                        })
+                    },
+                    fail: err => {
+                        console.log("上传失败");
+                        console.log(res);
+                    }
+                })
+
+                uploadtask.onProgressUpdate(
+                    res => {
+                        console.log(res);
+                    }
+                )
+
+            }, //返回图片的本地文件路径列表 tempFilePaths,
+        });
+    }
+
+})
+```
+
+## 157~161 云函数
