@@ -1107,3 +1107,150 @@ Page({
 ```
 
 ## 157~161 云函数
+
+### 搭建环境
+
+* node环境搭建
+1. 安装 nvm
+
+> [Mac OS 下 NVM 的安装与使用](https://www.jianshu.com/p/622ad36ee020)
+
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+
+安装完成后关闭终端，重新打开终端输入 nvm 验证一下是否安装成功，当出现“Node Version Manager”时，说明已安装成功。
+
+
+source .bash_profile
+
+```
+2. 安装 node
+
+```
+
+nvm常用命令：
+
+nvm install latest：安装最新版的node.js。nvm i == nvm install。
+nvm install [version]：安装指定版本的node.js 。
+nvm use [version]：使用某个版本的node。
+nvm list：列出当前安装了哪些版本的node。
+nvm uninstall [version]：卸载指定版本的node。
+nvm node_mirror [url]：设置nvm的镜像。
+nvm npm_mirror [url]：设置npm的镜像。
+
+```
+
+### 创建云函数
+
+eg：
+```
+// 云函数模板
+// 部署：在 cloud-functions/login 文件夹右击选择 “上传并部署”
+
+const cloud = require('wx-server-sdk')
+
+// 初始化 cloud
+cloud.init()
+
+/**
+ * 这个示例将经自动鉴权过的小程序用户 openid 返回给小程序端
+ * 
+ * event 参数包含小程序端调用传入的 data
+ * 
+ */
+exports.main = (event, context) => {
+  console.log(event)
+  console.log(context)
+
+  // 可执行其他自定义逻辑
+  // console.log 的内容可以在云开发云函数调用日志查看
+
+  // 获取 WX Context (微信调用上下文)，包括 OPENID、APPID、及 UNIONID（需满足 UNIONID 获取条件）
+  const wxContext = cloud.getWXContext()
+
+  return {
+    event,
+    openid: wxContext.OPENID,
+    appid: wxContext.APPID,
+    unionid: wxContext.UNIONID,
+  }
+}
+
+1. 在cloudfunctions文件夹上，右键->创建云函数，填入云函数的名称，然后点击确定即可创建好。然后就可以在相应的index.js文件中写代码了。
+
+// 云函数入口文件
+const cloud = require('wx-server-sdk')
+
+cloud.init()
+
+// 云函数入口函数
+exports.main = async(event, context) => {
+  const a = event.a;
+  const b = event.b;
+  const result = a + b;
+  return {
+    result
+  }
+
+}
+
+2. 上传和部署：
+
+在本地创建完云函数后，还只是在本地，所以还需要上传到服务器和部署。上传和部署非常简单，我们只需要在相应的函数的文件夹上，右键->上传并部署：云端安装依赖即可。
+
+3. 调用
+
+// funcdemo/pages/index/index.js
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+
+    wx.cloud.callFunction({
+      // 要调用的云函数名称
+      name: 'login',
+      // 传递给云函数的参数
+      // data: {
+      //   x: 1,
+      //   y: 2,
+      // },
+      success: res => {
+        console.log(res);
+      },
+      fail: err => {
+        // handle error
+        console.log(err);
+      },
+      complete: () => {
+        // ...
+        console.log("完成");
+      }
+    });
+
+    wx.cloud.callFunction({
+      name: "add",
+      data: {
+        a: 10,
+        b: 20
+      },
+      success: res => {
+        console.log(res);
+      },
+      fail: err => {
+        console.log(err);
+      }
+    })
+
+  }
+})
+```
+
