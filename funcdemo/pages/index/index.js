@@ -13,6 +13,7 @@ Page({
    */
   onLoad: function(options) {
 
+    // 1. 调用云函数
     wx.cloud.callFunction({
       // 要调用的云函数名称
       name: 'login',
@@ -34,6 +35,7 @@ Page({
       }
     });
 
+    // 2. 调用云函数,传参数
     wx.cloud.callFunction({
       name: "add",
       data: {
@@ -47,14 +49,22 @@ Page({
         console.log(err);
       }
     });
-
+    // 3. 云函数操作数据库
     wx.cloud.callFunction({
       name: "article",
       success: res => {
         console.log("获取云端数据");
         console.log(res);
       }
-    })
+    });
+    // 4. 云函数调用http请求
+    wx.cloud.callFunction({
+      name: "joke",
+      success: res => {
+        console.log("获取云端http数据");
+        console.log(res);
+      }
+    });
 
   }
 })

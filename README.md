@@ -1285,3 +1285,66 @@ exports.main = async(event, context) => {
     })
 ```
 
+### 云函数http请求  
+
+joke 案例
+
+> [got库](https://github.com/sindresorhus/got)
+
+1. nvm use 8.9.0
+
+> 切换到当前目录 joke 下进行http的下载
+
+2. npm install got --save-dev
+
+--save-dev  服务器部署的时候需要
+
+```
+{
+  "name": "joke",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  },
+  "devDependencies": {
+    "got": "^9.6.0"
+  }
+}
+
+
+
+// 云函数入口文件
+const cloud = require('wx-server-sdk')
+const got = require('got')
+
+cloud.init()
+
+// 云函数入口函数
+exports.main = async(event, context) => {
+
+  const response = await got('http://v.juhe.cn/joke/content/list.php?key=7fa459ad3b865dedfb09dc07cb346564&page=2&pagesize=10&sort=asc&time=1418745237');
+  // 需要将字符串转换成js对象
+  const body = JSON.parse(response.body);
+  const jokes = body.result.data;
+  return jokes;
+}
+
+
+ // 4. 云函数调用http请求
+    wx.cloud.callFunction({
+      name: "joke",
+      success: res => {
+        console.log("获取云端http数据");
+        console.log(res);
+      }
+    });
+
+```
+
