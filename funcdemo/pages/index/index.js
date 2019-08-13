@@ -46,6 +46,14 @@ Page({
       fail: err => {
         console.log(err);
       }
+    });
+
+    wx.cloud.callFunction({
+      name: "article",
+      success: res => {
+        console.log("获取云端数据");
+        console.log(res);
+      }
     })
 
   }
