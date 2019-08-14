@@ -1347,4 +1347,103 @@ exports.main = async(event, context) => {
     });
 
 ```
+### 违规内容校验
+> appid wx08e3282a7dda50dd
+
+> AppSecret 35294d1b8df38f595ced5084e4dfc1ff
+
+1. https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/sec-check/security.msgSecCheck.html
+2. https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+
+```
+// 云函数入口文件
+const cloud = require('wx-server-sdk')
+const got = require('got')
+
+cloud.init()
+
+const APPID = "wx08e3282a7dda50dd";
+const APPSECRET = "35294d1b8df38f595ced5084e4dfc1ff";
+
+const tokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APPID + "&secret=" + APPSECRET;
+
+let checkUrl = "https://api.weixin.qq.com/wxa/msg_sec_check?access_token=";
+
+// 云函数入口函数
+exports.main = async(event, context) => {
+
+  const content = event.content;
+
+  const tokenRespones = await got(tokenUrl);
+
+  const ACCESS_TOKEN = JSON.parse(tokenRespones.body).access_token;
+
+  checkUrl = checkUrl + ACCESS_TOKEN;
+
+  const checkResponse = await got.post(checkUrl, {
+    body: {
+      content: content
+    }
+  });
+  return checkResponse.body;
+}
+
+// 有错误
+
+error :  `body` option must be a stream.Readable
+
+方案解决：
+
+// 云函数入口文件
+const cloud = require('wx-server-sdk')
+const got = require('got')
+
+cloud.init()
+
+const APPID = "wx08e3282a7dda50dd";
+const APPSECRET = "35294d1b8df38f595ced5084e4dfc1ff";
+
+const tokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APPID + "&secret=" + APPSECRET;
+
+let checkUrl = "https://api.weixin.qq.com/wxa/msg_sec_check?access_token=";
+
+// 云函数入口函数
+exports.main = async(event, context) => {
+
+  const content = event.content;
+
+  const tokenRespones = await got(tokenUrl);
+
+  const ACCESS_TOKEN = JSON.parse(tokenRespones.body).access_token;
+
+  checkUrl = checkUrl + ACCESS_TOKEN;
+
+  const checkResponse = await got.post(checkUrl, {
+    // 对象转字符串
+    body: JSON.stringify({
+      content: content
+    })
+  });
+  return checkResponse.body;
+}
+
+// 调用
+
+ // 5.校验内容是否违规
+    wx.cloud.callFunction({
+      name: "msgCheck",
+      data: {
+        content: "特3456书yuuo莞6543李zxcz蒜7782法fgnv级"
+      },
+      success: res => {
+        console.log("获取云端内容校验");
+        console.log(res);
+      },
+      fail: err => {
+        console.log("获取云端内容校验失败");
+        console.error(err);
+      }
+    })
+```
+
 
