@@ -6,6 +6,8 @@ Page({
    */
   data: {
 
+    content: "特3456书yuuo莞6543李zxcz蒜7782法fgnv级"
+
   },
 
   /**
@@ -80,7 +82,24 @@ Page({
         console.log("获取云端内容校验失败");
         console.error(err);
       }
-    })
+    });
+
+
+    // 6.校验内容是否违规 request
+    wx.cloud.callFunction({
+      name: "msgCheckRequst",
+      data: {
+        content: "特3456书yuuo莞6543李zxcz蒜7782法fgnv级"
+      },
+      success: res => {
+        console.log("获取云端内容校验request");
+        console.log(res);
+      },
+      fail: err => {
+        console.log("获取云端内容校验失败request");
+        console.error(err);
+      }
+    });
 
   }
 })
