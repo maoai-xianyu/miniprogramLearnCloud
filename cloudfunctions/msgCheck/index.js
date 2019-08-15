@@ -5,7 +5,7 @@ const got = require('got')
 cloud.init()
 
 const APPID = "wx08e3282a7dda50dd";
-const APPSECRET = "35294d1b8df38f595ced5084e4dfc1ff";
+const APPSECRET = "f845ab27fa9ee4792fe86026667bf4fc";
 
 const tokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + APPID + "&secret=" + APPSECRET;
 
@@ -30,5 +30,6 @@ exports.main = async(event, context) => {
       content: content
     })
   });
+  console.log(checkResponse);
   return checkResponse.body;
 }
