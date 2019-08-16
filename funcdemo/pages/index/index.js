@@ -101,5 +101,22 @@ Page({
       }
     });
 
+    // 7.校验内容是否违规 request
+    wx.cloud.callFunction({
+      name: "msgCheckRequstNew",
+      data: {
+        content: "特3456书yuuo莞6543李zxcz蒜7782法fgnv级"
+      },
+      success: res => {
+        console.log("获取云端内容校验request ----- new ");
+        console.log(res);
+      },
+      fail: err => {
+        console.log("获取云端内容校验失败request ---- new");
+        console.error(err);
+      }
+    });
+
+
   }
 })
