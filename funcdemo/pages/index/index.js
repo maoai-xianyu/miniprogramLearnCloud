@@ -118,5 +118,62 @@ Page({
     });
 
 
+  },
+
+  selectImageTap: function(event) {
+    var that = this;
+    // 1. 选择图片
+    wx.chooseImage({
+      count: 1,
+      success: res => {
+        const tempPath = res.tempFilePaths[0];
+        console.log(res);
+        console.log("图片的本地临时文件路径列表" + tempPath);
+        console.log("图片的本地临时文件列表" + res.tempFiles[0].path);
+
+        // 2. 上传图片
+        wx.cloud.uploadFile({
+          cloudPath: "pretty_girl.jpeg",
+          filePath: tempPath,
+          success: res => {
+            console.log("获取上传路径");
+            console.log(res);
+            const fileID = res.fileID;
+            // 3. 用云文件id换取真实链接
+            wx.cloud.getTempFileURL({
+              fileList: [fileID],
+              success: res => {
+                const tempFileURL = res.fileList[0].tempFileURL;
+                console.log(res);
+                console.log("tempFileURL---  " + tempFileURL)
+                wx.cloud.callFunction({
+                  name: "imageCheck",
+                  data: {
+                    imageUrl: tempFileURL
+                  },
+                  success: res => {
+                    console.log("图片鉴黄结果返回");
+                    console.log(res);
+                    const body = JSON.parse(res.result.body);
+                    console.log("图片鉴黄body返回");
+                    console.log(body);
+                  },
+                  fail: err => {
+                    console.log(err);
+                  }
+                })
+              }
+
+            })
+          },
+          fail: err => {
+            console.error(err);
+          }
+        })
+      },
+      fail: err => {
+        console.log(err);
+      }
+    })
   }
 })

@@ -1512,4 +1512,111 @@ exports.main = async (event, context) => {
     });
 ```
 
+### 图片鉴黄
+
+* 腾讯云
+1. https://cloud.tencent.com/document/product/865/18709
+2. https://cloud.tencent.com/product/pornidentification/getting-started
+3. https://cloud.tencent.com/document/product/864/17609  
+
+* npm i --save image-node-sdk
+
+```
+云服务
+
+// 云函数入口文件
+const cloud = require('wx-server-sdk')
+
+// 云函数入口文件
+const {
+  ImageClient
+} = require("image-node-sdk");
+
+let AppId = '1252364497'; // 腾讯云 AppId
+let SecretId = 'AKIDlINF3b4yLYWyEKynBNOAnEbjeMBT6WmD'; // 腾讯云 SecretId
+let SecretKey = 'OYTR5cyFBsKZYLzUkxvhDUVLzOgiW5Po'; // 腾讯云 SecretKey
+
+cloud.init()
+
+// 云函数入口函数
+exports.main = async(event, context) => {
+  const imageUrl = event.imageUrl;
+  console.log("imageUrl  --  " + imageUrl);
+
+  let imgClient = new ImageClient({
+    AppId,
+    SecretId,
+    SecretKey
+  });
+  try {
+    return await imgClient.imgPornDetect({
+      data: {
+        url_list: [imageUrl]
+      }
+    })
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+
+// 调用
+selectImageTap: function(event) {
+    var that = this;
+    // 1. 选择图片
+    wx.chooseImage({
+      count: 1,
+      success: res => {
+        const tempPath = res.tempFilePaths[0];
+        console.log(res);
+        console.log("图片的本地临时文件路径列表" + tempPath);
+        console.log("图片的本地临时文件列表" + res.tempFiles[0].path);
+
+        // 2. 上传图片
+        wx.cloud.uploadFile({
+          cloudPath: "pretty_girl.jpeg",
+          filePath: tempPath,
+          success: res => {
+            console.log("获取上传路径");
+            console.log(res);
+            const fileID = res.fileID;
+            // 3. 用云文件id换取真实链接
+            wx.cloud.getTempFileURL({
+              fileList: [fileID],
+              success: res => {
+                const tempFileURL = res.fileList[0].tempFileURL;
+                console.log(res);
+                console.log("tempFileURL---  " + tempFileURL)
+                wx.cloud.callFunction({
+                  name: "imageCheck",
+                  data: {
+                    imageUrl: tempFileURL
+                  },
+                  success: res => {
+                    console.log("图片鉴黄结果返回");
+                    console.log(res);
+                    const body = JSON.parse(res.result.body);
+                    console.log("图片鉴黄body返回");
+                    console.log(body);
+                  },
+                  fail: err => {
+                    console.log(err);
+                  }
+                })
+              }
+
+            })
+          },
+          fail: err => {
+            console.error(err);
+          }
+        })
+      },
+      fail: err => {
+        console.log(err);
+      }
+    })
+  }
+```
+
 
