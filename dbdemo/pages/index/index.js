@@ -18,13 +18,13 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    //this.selectArticle();
+    this.selectArticle();
     //this.seleceArticleById();
     //this.selectArticleWhere();
     //this.addArticle();
     //this.removeArticle();
     //this.updateArticleById();
-    this.updateArticleAllSet();
+    //this.updateArticleAllSet();
   },
   // 获取数据，获取所有数据（考虑到性能，小程序一次性最多只能获取20条数据)
   selectArticle: function() {
@@ -39,6 +39,11 @@ Page({
       console.log("查询数据全部，最多20条");
       console.log(res);
     });
+
+    db.collection("article").get().then(res => {
+      console.log("===============");
+      console.log(res);
+    })
   },
   // 如果你知道某条数据的id，可以根据id获取某条数据：通过id获取数据需要通过doc函数来实现
   seleceArticleById: function() {
